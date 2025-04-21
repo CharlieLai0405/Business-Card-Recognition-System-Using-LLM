@@ -55,8 +55,8 @@ def get_ollama_card_recognition(path, recommend):
             base64_image = base64.b64encode(f.read()).decode("utf-8")
 
         response = client.chat.completions.create(
-            # model="gpt-4o-mini",  # for 5 threshold 8
-            model="gpt-4o",  # for 3 threshold 7
+            model="gpt-4o-mini",  # for 5 threshold 8
+            # model="gpt-4o",  # for 3 threshold 7
             messages=[
                 {
                     "role": "system",
@@ -82,8 +82,8 @@ def get_ollama_card_recognition(path, recommend):
             max_tokens=1000,
         )
 
-        # Use_model = "gpt-4o-mini"
-        Use_model = "gpt-4o"
+        Use_model = "gpt-4o-mini"
+        # Use_model = "gpt-4o"
         usage = response.usage
         input_tokens = usage.prompt_tokens
         output_tokens = usage.completion_tokens
@@ -101,14 +101,14 @@ def get_ollama_card_recognition(path, recommend):
 
         res = eval(res)
         if "姓名" not in res:
-            return "Failed"
+            return "Failed", 0, 0, 0
         res = f"{res}"
 
         return res, cost_twd, input_tokens, output_tokens
 
     except Exception as e:
         print(e)
-        return "Failed"
+        return "Failed", 0, 0, 0
 
 
 def ask_GPTVision_check(path, input_text):
@@ -117,8 +117,8 @@ def ask_GPTVision_check(path, input_text):
             base64_image = base64.b64encode(f.read()).decode("utf-8")
 
         response = client.chat.completions.create(
-            # model="gpt-4o-mini",  # for 5 threshold 8
-            model="gpt-4o",  # for 3 threshold 7
+            model="gpt-4o-mini",  # for 5 threshold 8
+            # model="gpt-4o",  # for 3 threshold 7
             messages=[
                 {"role": "system", "content": "你是一位幫助我驗證名片辨識結果的助手"},
                 {
@@ -145,8 +145,8 @@ def ask_GPTVision_check(path, input_text):
             max_tokens=1000,
         )
 
-        # Use_model = "gpt-4o-mini"
-        Use_model = "gpt-4o"
+        Use_model = "gpt-4o-mini"
+        # Use_model = "gpt-4o"
         usage = response.usage
         input_tokens = usage.prompt_tokens
         output_tokens = usage.completion_tokens
@@ -162,7 +162,7 @@ def ask_GPTVision_check(path, input_text):
 
     except Exception as e:
         print(e)
-        return "Failed"
+        return "Failed", 0, 0, 0
 
 
 def try_ollama_card_recognition(path):
@@ -206,12 +206,13 @@ def try_ollama_card_recognition(path):
         picture_count: {picture_count},\n
         model: gpt-4o-mini,\n
         cost_twd: {Temp_cost_twd},\n
-        input_tokens: {Temp_input_tokens},\n
+        input_tokens: {Temp_input_tokens},\n 
         output_tokens: {Temp_output_tokens}\n""")
+        # model: gpt-4o-mini,\n
 
         return ret, Temp_cost_twd, Temp_input_tokens, Temp_output_tokens
 
-    return "{}"
+    return "{}", 0, 0, 0
 
 
 picture_count = 0
